@@ -1,1 +1,32 @@
-{"manifest_version":3,"name":"sciss","version":"0","description":"Take screenshot (Ctrl+Shift+S)","icons":{"128":"128.png"},"commands":{"0":{"suggested_key":{"default":"Ctrl+Shift+S"},"description":"Take screenshot"}},"permissions":["contextMenus","debugger","downloads","management","scripting","tabs"],"host_permissions":["<all_urls>"],"background":{"service_worker":"s.js"},"action":{}}
+{
+  "manifest_version": 3,
+  "name": "sciss",
+  "version": "0",
+  "description": "Take screenshot (Ctrl+Shift+S)",
+  "icons": {
+    "128":"128.png"
+  },
+  "commands": {
+    "0": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S"
+      },
+      "description":"Take screenshot"
+    }
+  },
+  "permissions": [
+    "contextMenus",
+    "debugger",
+    "downloads",
+    "management",
+    "scripting",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "s.js"
+  },
+  "action": {}
+}
