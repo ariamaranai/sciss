@@ -1,9 +1,9 @@
 (chrome => {
   let run = (a, b) => {
     if ((b ??= a).url[0] != "c") {
-      let id = b.id;
-      let tabId = { tabId: id };
-      chrome.action.disable(id);
+      let tabId = b.id;
+      let target = { tabId };
+      chrome.action.disable(tabId);
       chrome.scripting.executeScript({
         target: tabId,
         world: "MAIN",
@@ -102,11 +102,11 @@
             );
           }),
       }, async results => {
-        chrome.action.enable(id);
+        chrome.action.enable(tabId);
         if (results &&= results[0].result) {
-          chrome.debugger.attach(tabId, "1.3");
+          chrome.debugger.attach(target, "1.3");
           let url = "data:image/png;base64," +
-                    (await chrome.debugger.sendCommand(tabId, "Page.captureScreenshot", results)).data;
+                    (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", results)).data;
           let filename =  b.url.replace(/^.*?:\/\//, "").replace(/[|?":/<>*\\]/g, "_") + ".png";
           let crxs = await chrome.management.getAll();
           let crx = crxs.find(v => v.name == "file.format");
@@ -114,7 +114,7 @@
             ? await chrome.management.setEnabled((crx = crx.id), !1)
             : (crx = 0);
           await chrome.downloads.download({url, filename});
-          chrome.debugger.detach(tabId);
+          chrome.debugger.detach(target);
           crx && chrome.management.setEnabled(crx, !0);
         }
       });
