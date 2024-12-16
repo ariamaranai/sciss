@@ -5,7 +5,7 @@
       let target = { tabId };
       chrome.action.disable(tabId);
       chrome.scripting.executeScript({
-        target: tabId,
+        target,
         world: "MAIN",
         func: () =>
           new Promise(resolve => {
@@ -107,7 +107,7 @@
           chrome.debugger.attach(target, "1.3");
           let url = "data:image/png;base64," +
                     (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", results)).data;
-          let filename =  b.url.replace(/^.*?:\/\//, "").replace(/[|?":/<>*\\]/g, "_") + ".png";
+          let filename =  b.url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png";
           let crxs = await chrome.management.getAll();
           let crx = crxs.find(v => v.name == "file.format");
           crx && crx.enabled
