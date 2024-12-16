@@ -100,7 +100,7 @@
               rect.remove(),
               resolve()
             );
-          }),
+          })
       }, async results => {
         chrome.action.enable(tabId);
         if (results &&= results[0].result) {
