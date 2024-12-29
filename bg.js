@@ -106,7 +106,7 @@
         if (results &&= results[0].result) {
           chrome.debugger.attach(target, "1.3");
           let url = "data:image/png;base64," +
-                    (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", results)).data;
+            (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", results)).data;
           let filename =  b.url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png";
           let crxs = await chrome.management.getAll();
           let crx = crxs.find(v => v.name == "fformat");
