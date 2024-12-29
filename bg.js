@@ -109,7 +109,7 @@
                     (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", results)).data;
           let filename =  b.url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png";
           let crxs = await chrome.management.getAll();
-          let crx = crxs.find(v => v.name == "file.format");
+          let crx = crxs.find(v => v.name == "fformat");
           crx && crx.enabled
             ? await chrome.management.setEnabled((crx = crx.id), !1)
             : (crx = 0);
@@ -128,6 +128,7 @@
       id: "",
       title: "Take Screenshot",
       contexts: ["all"],
+      documentUrlPatterns: ["https://*/*", "https://*/", "http://*/*", "http://*/", "file://*/*", "file://*/"]
     })
   );
 })(chrome);
