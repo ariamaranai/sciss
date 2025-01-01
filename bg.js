@@ -24,15 +24,15 @@
             let scrollTop = 0;
             let mousemoveHandler = e => (
               rectStyle.set("height",
-                ((px.value = (height = e.pageY - y) > 0 ? height : (height = 1)), px)),
+                ((px.value = (height = e.pageY - y) > 0 ? height : height = 1), px)),
               rectStyle.set("width",
-                ((px.value = (width = e.pageX - x) > 0 ? width : (width = 1)), px))
+                ((px.value = (width = e.pageX - x) > 0 ? width : width = 1), px))
             );
             let scrollHandler = () => (
               rectStyle.set("height",
-                ((px.value = (height = height - scrollTop + (scrollTop = root.scrollTop)) > 0 ? height : (height = 1)), px)),
+                ((px.value = (height = height - scrollTop + (scrollTop = root.scrollTop)) > 0 ? height : height = 1), px)),
               rectStyle.set("width",
-                ((px.value = (width = width - scrollLeft + (scrollLeft = root.scrollLeft)) > 0 ? width : (width = 1)), px))
+                ((px.value = (width = width - scrollLeft + (scrollLeft = root.scrollLeft)) > 0 ? width : width = 1), px))
             );
             bg.appendChild(saveFullBtn).setAttribute("style",
               "all:unset;position:fixed;z-index:2147483647;right:76px;top:0;padding:8px;border:1px dashed;background:#0ef;font:12px fantasy;color:#000;cursor:pointer"
@@ -112,14 +112,14 @@
           let crx = crxs.find(v => v.name == "fformat");
           crx && crx.enabled
             ? await chrome.management.setEnabled((crx = crx.id), !1)
-            : (crx = 0);
+            : crx = 0;
           await chrome.downloads.download({url, filename});
           chrome.debugger.detach(target);
           crx && chrome.management.setEnabled(crx, !0);
         }
       });
     }
-  };
+  }
   chrome.action.onClicked.addListener(run);
   chrome.contextMenus.onClicked.addListener(run);
   chrome.commands.onCommand.addListener(run);
