@@ -16,12 +16,13 @@
             let saveVisibleBtn = bg.cloneNode();
             let rect = bg.cloneNode();
             let rectStyle = rect.attributeStyleMap;
-            let x = 0;
-            let y = 0;
-            let width = 0;
-            let height = 0;
+            let x = root.scrollLeft;
+            let y = root.scrollTop;
+            let width = innerWidth;
+            let height = innerHeight;
             let scrollLeft = 0;
             let scrollTop = 0;
+            let scale = devicePixelRatio;
             let mousemoveHandler = e => (
               rectStyle.set("height",
                 ((px.value = (height = e.pageY - y) > 0 ? height : height = 1), px)),
@@ -53,13 +54,7 @@
               bg.remove(),
               resolve({
                 captureBeyondViewport: !0,
-                clip: {
-                  x: root.scrollLeft,
-                  y: root.scrollTop,
-                  width: innerWidth,
-                  height: innerHeight,
-                  scale: devicePixelRatio
-                }
+                clip: { x, y, width, height, scale }
               })
             );
             bg.addEventListener("click", e => { 
@@ -76,6 +71,7 @@
                   "px;position:absolute;z-index:2147483647;border:1px dashed #999;box-sizing:border-box;backdrop-filter:brightness(1.2);cursor:crosshair"
                 );
                 addEventListener("mousemove", mousemoveHandler),
+                addEventListener("scroll", scrollHandler);
                 bg.addEventListener("click", () => (
                   bg.remove(),
                   rect.remove(),
@@ -83,18 +79,11 @@
                   removeEventListener("scroll", scrollHandler),
                   resolve({
                     captureBeyondViewport: !0,
-                    clip: {
-                      x,
-                      y,
-                      width,
-                      height,
-                      scale: devicePixelRatio
-                    }
+                    clip: { x, y, width, height, scale }
                   })
                 ), { once: !0 });
               }
             }, { once: !0 });
-            addEventListener("scroll", scrollHandler);
             bg.oncontextmenu = () => (
               bg.remove(),
               rect.remove(),
