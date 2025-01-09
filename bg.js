@@ -84,7 +84,8 @@
                 ), { once: !0 });
               }
             }, { once: !0 });
-            bg.oncontextmenu = () => (
+            bg.oncontextmenu = e => (
+              e.stopImmediatePropagation(),
               bg.remove(),
               rect.remove(),
               resolve()
