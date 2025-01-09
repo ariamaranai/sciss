@@ -1,4 +1,4 @@
-(chrome => {
+{
   let run = (a, b) => {
     if ((b ??= a).url[0] != "c") {
       let tabId = b.id;
@@ -113,12 +113,12 @@
   chrome.action.onClicked.addListener(run);
   chrome.contextMenus.onClicked.addListener(run);
   chrome.commands.onCommand.addListener(run);
-  chrome.runtime.onInstalled.addListener(() =>
-    chrome.contextMenus.create({
-      id: "",
-      title: "Take Screenshot",
-      contexts: ["all"],
-      documentUrlPatterns: ["https://*/*", "https://*/", "http://*/*", "http://*/", "file://*/*", "file://*/"]
-    })
-  );
-})(chrome);
+}
+chrome.runtime.onInstalled.addListener(() =>
+  chrome.contextMenus.create({
+    id: "",
+    title: "Take Screenshot",
+    contexts: ["all"],
+    documentUrlPatterns: ["https://*/*", "https://*/", "http://*/*", "http://*/", "file://*/*", "file://*/"]
+  })
+);
