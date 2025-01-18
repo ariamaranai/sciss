@@ -9,13 +9,11 @@
         world: "MAIN",
         func: () =>
           new Promise(resolve => {
-            let px = CSS.px(0);
-            let root = document.scrollingElement;
-            let bg = document.createElement("b");
-            let saveFullBtn = bg.cloneNode();
-            let saveVisibleBtn = bg.cloneNode();
-            let rect = bg.cloneNode();
-            let rectStyle = rect.attributeStyleMap;
+            let d = document;
+            let root = d.scrollingElement;
+            let bg = d.createElement("b");
+            let saveFullBtn = d.createElement("b");
+            let saveVisibleBtn = d.createElement("b");
             let x = root.scrollLeft;
             let y = root.scrollTop;
             let width = innerWidth;
@@ -23,18 +21,6 @@
             let scrollLeft = 0;
             let scrollTop = 0;
             let scale = devicePixelRatio;
-            let mousemoveHandler = e => (
-              rectStyle.set("height",
-                ((px.value = (height = e.pageY - y) > 0 ? height : height = 1), px)),
-              rectStyle.set("width",
-                ((px.value = (width = e.pageX - x) > 0 ? width : width = 1), px))
-            );
-            let scrollHandler = () => (
-              rectStyle.set("height",
-                ((px.value = (height = height - scrollTop + (scrollTop = root.scrollTop)) > 0 ? height : height = 1), px)),
-              rectStyle.set("width",
-                ((px.value = (width = width - scrollLeft + (scrollLeft = root.scrollLeft)) > 0 ? width : width = 1), px))
-            );
             bg.appendChild(saveFullBtn).setAttribute("style",
               "all:unset;position:fixed;z-index:2147483647;right:76px;top:0;padding:8px;border:1px dashed;background:#0ef;font:12px fantasy;color:#000;cursor:pointer"
             );
@@ -59,6 +45,21 @@
             );
             bg.addEventListener("click", e => { 
               if (e.target == bg) {
+                let px = CSS.px(0);
+                let rect = d.createElement("b");
+                let rectStyle = rect.attributeStyleMap;
+                let mousemoveHandler = e => (
+                  rectStyle.set("height",
+                    ((px.value = (height = e.pageY - y) > 0 ? height : height = 1), px)),
+                  rectStyle.set("width",
+                    ((px.value = (width = e.pageX - x) > 0 ? width : width = 1), px))
+                );
+                let scrollHandler = () => (
+                  rectStyle.set("height",
+                    ((px.value = (height = height - scrollTop + (scrollTop = root.scrollTop)) > 0 ? height : height = 1), px)),
+                  rectStyle.set("width",
+                    ((px.value = (width = width - scrollLeft + (scrollLeft = root.scrollLeft)) > 0 ? width : width = 1), px))
+                );
                 scrollLeft = root.scrollLeft;
                 scrollTop = root.scrollTop;
                 saveFullBtn.remove();
@@ -103,7 +104,7 @@
           crx && crx.enabled
             ? await chrome.management.setEnabled((crx = crx.id), !1)
             : crx = 0;
-          await chrome.downloads.download({url, filename});
+          await chrome.downloads.download({ url, filename });
           chrome.debugger.detach(target);
           crx && chrome.management.setEnabled(crx, !0);
         }
