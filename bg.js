@@ -62,8 +62,8 @@
                 );
                 scrollLeft = root.scrollLeft;
                 scrollTop = root.scrollTop;
-                saveFullBtn.remove();
-                saveVisibleBtn.remove();
+                saveFullBtn.style =
+                saveVisibleBtn.style = "";
                 root.appendChild(rect).setAttribute("style",
                   "height:0;width:0;top:" +
                   (y = e.pageY) +
