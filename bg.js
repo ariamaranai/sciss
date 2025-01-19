@@ -104,7 +104,7 @@
           crx && crx.enabled
             ? await chrome.management.setEnabled((crx = crx.id), !1)
             : crx = 0;
-          await chrome.downloads.download({ url, filename });
+          await chrome.downloads.download({ url, filename, saveAs: !0 });
           chrome.debugger.detach(target);
           crx && chrome.management.setEnabled(crx, !0);
         }
