@@ -7,8 +7,8 @@
       chrome.scripting.executeScript({
         target,
         world: "MAIN",
-        func: () =>
-          new Promise(resolve => {
+        func: async () =>
+          await new Promise(resolve => {
             let d = document;
             let root = d.scrollingElement;
             let bg = d.createElement("b");
@@ -21,6 +21,7 @@
             let scrollLeft = 0;
             let scrollTop = 0;
             let scale = devicePixelRatio;
+            let rect;
             bg.appendChild(saveFullBtn).setAttribute("style",
               "all:unset;position:fixed;z-index:2147483647;right:76px;top:0;padding:8px;border:1px dashed;background:#0ef;font:12px fantasy;color:#000;cursor:pointer"
             );
@@ -46,8 +47,7 @@
             bg.addEventListener("click", e => { 
               if (e.target == bg) {
                 let px = CSS.px(0);
-                let rect = d.createElement("b");
-                let rectStyle = rect.attributeStyleMap;
+                let rectStyle = (rect = d.createElement("b")).attributeStyleMap;
                 let mousemoveHandler = e => (
                   rectStyle.set("height",
                     ((px.value = (height = e.pageY - y) > 0 ? height : height = 1), px)),
@@ -71,12 +71,11 @@
                   (x = e.pageX) +
                   "px;position:absolute;z-index:2147483647;border:1px dashed #999;box-sizing:border-box;backdrop-filter:brightness(1.2);cursor:crosshair"
                 );
-                addEventListener("mousemove", mousemoveHandler),
+                bg.addEventListener("mousemove", mousemoveHandler),
                 addEventListener("scroll", scrollHandler);
                 bg.addEventListener("click", () => (
                   bg.remove(),
                   rect.remove(),
-                  removeEventListener("mousemove", mousemoveHandler),
                   removeEventListener("scroll", scrollHandler),
                   resolve({
                     captureBeyondViewport: !0,
@@ -85,12 +84,12 @@
                 ), { once: !0 });
               }
             }, { once: !0 });
-            bg.oncontextmenu = e => (
+            addEventListener("contextmenu", e => (
               e.stopImmediatePropagation(),
               bg.remove(),
               rect.remove(),
               resolve()
-            );
+            ), { once: !0 });
           })
       }, async results => {
         chrome.action.enable(tabId);
