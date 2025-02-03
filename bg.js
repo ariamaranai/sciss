@@ -99,7 +99,7 @@
         chrome.action.enable(tabId);
         if (results &&= results[0].result) {
           chrome.debugger.attach(target, "1.3");
-          let url = "data:image/png;base64," +
+          let dataUrl = "data:image/png;base64," +
             (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", results)).data;
           let filename =  url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png";
           let crxs = await chrome.management.getAll();
@@ -107,7 +107,7 @@
           crx && crx.enabled
             ? await chrome.management.setEnabled((crx = crx.id), !1)
             : crx = 0;
-          await chrome.downloads.download({ url, filename, saveAs: !0 });
+          await chrome.downloads.download({ url: dataUrl, filename, saveAs: !0 });
           chrome.debugger.detach(target);
           crx && chrome.management.setEnabled(crx, !0);
         }
