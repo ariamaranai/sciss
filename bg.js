@@ -1,12 +1,15 @@
 {
-  let run = (a, b) => {
-    if ((b ??= a).url[0] != "c") {
+  let run = async (a, b) => {
+    let url = (b ??= a).url;
+    if (url[0] != "c") {
       let tabId = b.id;
       let target = { tabId };
       chrome.action.disable(tabId);
       chrome.scripting.executeScript({
         target,
-        world: "MAIN",
+        world: (await chrome.contentSettings.javascript.get({
+          primaryUrl: url
+        })).setting == "allow" ? "MAIN" : "ISOLATED",
         func: async () =>
           await new Promise(resolve => {
             let d = document;
@@ -98,7 +101,7 @@
           chrome.debugger.attach(target, "1.3");
           let url = "data:image/png;base64," +
             (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", results)).data;
-          let filename =  b.url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png";
+          let filename =  url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png";
           let crxs = await chrome.management.getAll();
           let crx = crxs.find(v => v.name == "fformat");
           crx && crx.enabled
