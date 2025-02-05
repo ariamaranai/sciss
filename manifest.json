@@ -16,7 +16,6 @@
   },
   "permissions": [
     "contextMenus",
-    "contentSettings",
     "debugger",
     "downloads",
     "management",

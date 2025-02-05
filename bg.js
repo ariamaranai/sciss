@@ -7,9 +7,6 @@
       chrome.action.disable(tabId);
       chrome.scripting.executeScript({
         target,
-        world: (await chrome.contentSettings.javascript.get({
-          primaryUrl: url
-        })).setting == "allow" ? "MAIN" : "ISOLATED",
         func: async () =>
           await new Promise(resolve => {
             let d = document;
@@ -26,13 +23,13 @@
             let scale = devicePixelRatio;
             let rect;
             bg.appendChild(saveFullBtn).setAttribute("style",
-              "all:unset;position:fixed;z-index:2147483647;right:76px;top:0;padding:8px;border:1px dashed;background:#0ef;font:12px fantasy;color:#000;cursor:pointer"
+              "position:fixed;z-index:2147483647;right:76px;top:0;padding:8px;border:1px dashed;background:#0ef;font:12px fantasy;color:#000;cursor:pointer"
             );
             bg.appendChild(saveVisibleBtn).setAttribute("style",
-              "all:unset;position:fixed;z-index:2147483647;right:0;top:0;padding:8px;border:1px dashed;background:#9f0;font:12px fantasy;color:#000;cursor:pointer"
+              "position:fixed;z-index:2147483647;right:0;top:0;padding:8px;border:1px dashed;background:#9f0;font:12px fantasy;color:#000;cursor:pointer"
             );
             root.appendChild(bg).setAttribute("style",
-              "all:unset;position:fixed;inset:0;z-index:2147483646;height:100%;backdrop-filter:brightness(.8);cursor:crosshair"
+              "position:fixed;inset:0;z-index:2147483646;height:100%;backdrop-filter:brightness(.8);cursor:crosshair"
             );
             saveFullBtn.textContent = "Save Full";
             saveVisibleBtn.textContent = "Save Visible";
