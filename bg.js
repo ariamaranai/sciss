@@ -5,7 +5,7 @@
       let tabId = b.id;
       let target = { tabId };
       chrome.action.disable(tabId);
-      chrome.scripting.executeScript({
+      let results = await chrome.scripting.executeScript({
         target,
         func: async () =>
           await new Promise(resolve => {
@@ -92,23 +92,22 @@
               resolve()
             ), { once: !0 });
           })
-      }, async results => {
-        chrome.action.enable(tabId);
-        if (results &&= results[0].result) {
-          chrome.debugger.attach(target, "1.3");
-          let dataUrl = "data:image/png;base64," +
-            (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", results)).data;
-          let filename =  url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png";
-          let crxs = await chrome.management.getAll();
-          let crx = crxs.find(v => v.name == "fformat");
-          crx && crx.enabled
-            ? await chrome.management.setEnabled((crx = crx.id), !1)
-            : crx = 0;
-          await chrome.downloads.download({ url: dataUrl, filename, saveAs: !0 });
-          chrome.debugger.detach(target);
-          crx && chrome.management.setEnabled(crx, !0);
-        }
       });
+      chrome.action.enable(tabId);
+      if (results &&= results[0].result) {
+        chrome.debugger.attach(target, "1.3");
+        let dataUrl = "data:image/png;base64," +
+          (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", results)).data;
+        let filename =  url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png";
+        let crxs = await chrome.management.getAll();
+        let crx = crxs.find(v => v.name == "fformat");
+        crx && crx.enabled
+          ? await chrome.management.setEnabled((crx = crx.id), !1)
+          : crx = 0;
+        await chrome.downloads.download({ url: dataUrl, filename, saveAs: !0 });
+        chrome.debugger.detach(target);
+        crx && chrome.management.setEnabled(crx, !0);
+      }
     }
   }
   chrome.action.onClicked.addListener(run);
