@@ -8,9 +8,6 @@
       try {
         let results = await chrome.scripting.executeScript({
           target,
-          world: (await chrome.contentSettings.javascript.get({
-            primaryUrl: url
-          })).setting == "allow" ? "MAIN" : "ISOLATED",
           func: async () =>
             await new Promise(resolve => {
               let d = document;
