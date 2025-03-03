@@ -116,9 +116,6 @@
   chrome.contextMenus.onClicked.addListener(run);
   chrome.commands.onCommand.addListener(run);
 }
-chrome.runtime.onSuspend.addListener(() => {
-  console.log(3);
-})
 chrome.runtime.onInstalled.addListener(() =>
   chrome.contextMenus.create({
     id: "",
