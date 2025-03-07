@@ -113,7 +113,6 @@ chrome.runtime.onInstalled.addListener(() =>
   chrome.contextMenus.create({
     id: "",
     title: "Take Screenshot",
-    contexts: ["page", "frame", "link", "editable", "image", "video"],
-    documentUrlPatterns: ["https://*/*", "https://*/", "http://*/*", "http://*/", "file://*/*", "file://*/"]
+    contexts: ["page", "frame", "link", "editable", "image", "video"]
   })
 );
