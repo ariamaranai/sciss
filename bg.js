@@ -64,7 +64,7 @@
                   (y = e.pageY) +
                   "px;left:" +
                   (x = e.pageX) +
-                  "px;position:absolute;z-index:2147483647;border:1px dashed #999;box-sizing:border-box;backdrop-filter:brightness(1.2);cursor:crosshair"
+                  "px;position:fixed;z-index:2147483647;border:1px dashed #999;box-sizing:border-box;backdrop-filter:brightness(1.2);cursor:crosshair"
                 );
                 bg.addEventListener("mousemove", mousemoveHandler),
                 rect.addEventListener("mousemove", mousemoveHandler),
