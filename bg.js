@@ -100,7 +100,8 @@
         chrome.debugger.detach(target);
         crx && chrome.management.setEnabled(crx, !0);
       }
-    }).catch(() => 0).finally(() => chrome.action.enable(tabId));
+      chrome.action.enable(tabId);
+    }).catch(() => chrome.action.enable(tabId));
   }
   chrome.action.onClicked.addListener(run);
   chrome.contextMenus.onClicked.addListener(run);
