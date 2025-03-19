@@ -43,9 +43,9 @@
             let rectStyle = (rect = d.createElement("b")).attributeStyleMap;
             let mousemoveHandler = e => (
               rectStyle.set("height",
-                ((px.value = (height = e.pageY - y) > 0 ? height : height = 1), px)),
+                ((px.value = (height = e.offsetY - y) > 0 ? height : height = 1), px)),
               rectStyle.set("width",
-                ((px.value = (width = e.pageX - x) > 0 ? width : width = 1), px))
+                ((px.value = (width = e.offsetX - x) > 0 ? width : width = 1), px))
             );
             let scrollHandler = () => (
               rectStyle.set("height",
@@ -59,9 +59,9 @@
             saveVisibleBtn.remove();
             root.appendChild(rect).setAttribute("style",
                 "height:0;width:0;top:" +
-                (y = e.pageY) +
+                (y = e.offsetY) +
                 "px;left:" +
-                (x = e.pageX) +
+                (x = e.offsetX) +
                 "px;position:fixed;z-index:2147483647;border:1px dashed #999;box-sizing:border-box;backdrop-filter:brightness(1.2);cursor:crosshair"
               );
               bg.addEventListener("mousemove", mousemoveHandler),
