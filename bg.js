@@ -7,7 +7,7 @@
       target,
       func: async () => await new Promise(resolve => {
         let d = document;
-        let root = d.scrollingElement;
+        let root = d.body;
         let bg = d.createElement("b");
         let saveFullBtn = d.createElement("b");
         let saveVisibleBtn = d.createElement("b");
@@ -19,6 +19,7 @@
         let scrollTop = 0;
         let scale = devicePixelRatio;
         let rect;
+
         bg.appendChild(saveFullBtn).setAttribute("style",
           "all:unset;position:fixed;z-index:2147483647;right:78px;top:0;padding:8px;border:1px dashed;background:#0ef;font:12px fantasy;color:#000;cursor:pointer"
         );
@@ -41,11 +42,13 @@
           if (e.target == bg) {
             let px = CSS.px(0);
             let rectStyle = (rect = d.createElement("b")).attributeStyleMap;
+            let offsetTop = root.offsetTop;
+            let offsetX = root.getBoundingClientRect().x;
             let mousemoveHandler = e => (
               rectStyle.set("height",
-                ((px.value = (height = e.offsetY - y) > 0 ? height : height = 1), px)),
+                ((px.value = (height = e.pageY - y + offsetTop) > 0 ? height : height = 1), px)),
               rectStyle.set("width",
-                ((px.value = (width = e.offsetX - x) > 0 ? width : width = 1), px))
+                ((px.value = (width = e.pageX - x - offsetX) > 0 ? width : width = 1), px))
             );
             let scrollHandler = () => (
               rectStyle.set("height",
@@ -57,34 +60,35 @@
             scrollTop = root.scrollTop;
             saveFullBtn.remove();
             saveVisibleBtn.remove();
+
             root.appendChild(rect).setAttribute("style",
-                "height:0;width:0;top:" +
-                (y = e.offsetY) +
-                "px;left:" +
-                (x = e.offsetX) +
-                "px;position:fixed;z-index:2147483647;border:1px dashed #999;box-sizing:border-box;backdrop-filter:brightness(1.2);cursor:crosshair"
-              );
-              bg.addEventListener("mousemove", mousemoveHandler),
-              rect.addEventListener("mousemove", mousemoveHandler),
-              addEventListener("scroll", scrollHandler);
-              bg.addEventListener("click", () => (
-                bg.remove(),
-                rect.remove(),
-                removeEventListener("scroll", scrollHandler),
-                resolve({
-                  captureBeyondViewport: !0,
-                  clip: { x, y, width, height, scale }
-                })
-              ), { once: !0 });
-            }
-          }, { once: !0 });
-          bg.addEventListener("contextmenu", e => (
-            e.stopImmediatePropagation(),
-            bg.remove(),
-            rect && rect.remove(),
-            resolve()
-          ));
-        })
+              "height:0;width:0;top:" +
+              (y = e.pageY + offsetTop) +
+              "px;left:" +
+              (x = e.pageX - offsetX) +
+              "px;position:absolute;z-index:2147483647;border:1px dashed #999;box-sizing:border-box;backdrop-filter:brightness(1.2);cursor:crosshair"
+            );
+            bg.addEventListener("mousemove", mousemoveHandler),
+            rect.addEventListener("mousemove", mousemoveHandler),
+            addEventListener("scroll", scrollHandler);
+            bg.addEventListener("click", () => (
+              bg.remove(),
+              rect.remove(),
+              removeEventListener("scroll", scrollHandler),
+              resolve({
+                captureBeyondViewport: !0,
+                clip: { x, y, width, height, scale }
+              })
+            ), { once: !0 });
+          }
+        }, { once: !0 });
+        bg.addEventListener("contextmenu", e => (
+          e.stopImmediatePropagation(),
+          bg.remove(),
+          rect && rect.remove(),
+          resolve()
+        ));
+      })
     }).then(async results => {
       if (results &&= results[0].result) {
         chrome.debugger.attach(target, "1.3");
