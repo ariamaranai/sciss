@@ -90,7 +90,6 @@
     }).then(async results => {
       if (results &&= results[0].result) {
         chrome.debugger.attach(target, "1.3");
-        let filename =  b.url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png";
         let crxs = await chrome.management.getAll();
         let crx = crxs.find(v => v.name == "fformat");
         crx && crx.enabled
@@ -98,7 +97,8 @@
           : crx = 0;
         await chrome.downloads.download({
           url: "data:image/png;base64," + (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", results)).data,
-          filename, saveAs: !0
+          filename: b.url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png",
+          saveAs: !0
         });
         chrome.debugger.detach(target);
         crx && chrome.management.setEnabled(crx, !0);
