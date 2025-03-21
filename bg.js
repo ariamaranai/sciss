@@ -87,23 +87,21 @@
           resolve()
         ));
       })
-    }).then(results => {
+    }).then(async results => {
       if (results &&= results[0].result) {
         chrome.debugger.attach(target, "1.3");
-        let determiningFilenameHandler = (item, suggest) => (
-          item.byExtensionId == chrome.runtime.id && (
-            suggest({ filename: b.url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png" }),
-            chrome.downloads.onDeterminingFilename.removeListener(determiningFilenameHandler)
-          )
-        );
-        chrome.downloads.onDeterminingFilename.addListener(determiningFilenameHandler);
-        chrome.debugger.sendCommand(target, "Page.captureScreenshot", results, r => (
-          chrome.debugger.detach(target),
-          chrome.downloads.download({
-            url: "data:image/png;base64," + r.data,
-            saveAs: !0
-          })
-        ));
+        let filename =  b.url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png";
+        let crxs = await chrome.management.getAll();
+        let crx = crxs.find(v => v.name == "fformat");
+        crx && crx.enabled
+          ? await chrome.management.setEnabled((crx = crx.id), !1)
+          : crx = 0;
+        await chrome.downloads.download({
+          url: "data:image/png;base64," + (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", results)).data,
+          filename, saveAs: !0
+        });
+        chrome.debugger.detach(target);
+        crx && chrome.management.setEnabled(crx, !0);
       }
       chrome.action.enable(tabId);
     }).catch(() => chrome.action.enable(tabId));
