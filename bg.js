@@ -91,10 +91,10 @@
       if (results &&= results[0].result) {
         chrome.debugger.attach(target, "1.3");
         let determiningFilenameHandler = (item, suggest) => (
-          item.byExtensionId == chrome.runtime.id && suggest({ 
-            filename: b.url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png"
-          }),
-          chrome.downloads.onDeterminingFilename.removeListener(determiningFilenameHandler)
+          item.byExtensionId == chrome.runtime.id && (
+            suggest({ filename: b.url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png" }),
+            chrome.downloads.onDeterminingFilename.removeListener(determiningFilenameHandler)
+          )
         );
         chrome.downloads.onDeterminingFilename.addListener(determiningFilenameHandler);
         chrome.debugger.sendCommand(target, "Page.captureScreenshot", results, r => (
