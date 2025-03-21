@@ -19,7 +19,6 @@
         let scrollTop = 0;
         let scale = devicePixelRatio;
         let rect;
-
         bg.appendChild(saveFullBtn).setAttribute("style",
           "all:unset;position:fixed;z-index:2147483647;right:78px;top:0;padding:8px;border:1px dashed;background:#0ef;font:12px fantasy;color:#000;cursor:pointer"
         );
@@ -60,7 +59,6 @@
             scrollTop = root.scrollTop;
             saveFullBtn.remove();
             saveVisibleBtn.remove();
-
             root.appendChild(rect).setAttribute("style",
               "height:0;width:0;top:" +
               (y = e.pageY + offsetTop) +
@@ -89,20 +87,23 @@
           resolve()
         ));
       })
-    }).then(async results => {
+    }).then(results => {
       if (results &&= results[0].result) {
         chrome.debugger.attach(target, "1.3");
-        let dataUrl = "data:image/png;base64," +
-          (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", results)).data;
-        let filename =  b.url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png";
-        let crxs = await chrome.management.getAll();
-        let crx = crxs.find(v => v.name == "fformat");
-        crx && crx.enabled
-          ? await chrome.management.setEnabled((crx = crx.id), !1)
-          : crx = 0;
-        await chrome.downloads.download({ url: dataUrl, filename, saveAs: !0 });
-        chrome.debugger.detach(target);
-        crx && chrome.management.setEnabled(crx, !0);
+        let determiningFilenameHandler = (item, suggest) => (
+          item.byExtensionId == chrome.runtime.id && suggest({ 
+            filename: b.url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png"
+          }),
+          chrome.downloads.onDeterminingFilename.removeListener(determiningFilenameHandler)
+        );
+        chrome.downloads.onDeterminingFilename.addListener(determiningFilenameHandler);
+        chrome.debugger.sendCommand(target, "Page.captureScreenshot", results, r => (
+          chrome.debugger.detach(target),
+          chrome.downloads.download({
+            url: "data:image/png;base64," + r.data,
+            saveAs: !0
+          })
+        ));
       }
       chrome.action.enable(tabId);
     }).catch(() => chrome.action.enable(tabId));
