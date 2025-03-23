@@ -87,24 +87,26 @@
           resolve()
         ));
       })
-    }).then(async results => {
-      if (results &&= results[0].result) {
-        chrome.debugger.attach(target, "1.3");
-        let crxs = await chrome.management.getAll();
-        let crx = crxs.find(v => v.name == "fformat");
-        crx && crx.enabled
-          ? await chrome.management.setEnabled((crx = crx.id), !1)
-          : crx = 0;
-        await chrome.downloads.download({
-          url: "data:image/png;base64," + (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", results)).data,
-          filename: b.url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png",
-          saveAs: !0
-        });
-        chrome.debugger.detach(target);
-        crx && chrome.management.setEnabled(crx, !0);
-      }
-      chrome.action.enable(tabId);
-    }).catch(() => chrome.action.enable(tabId));
+    }).then(results => (
+      (results &&= results[0].result) && (
+        chrome.debugger.attach(target, "1.3"),
+        chrome.debugger.sendCommand(target, "Page.captureScreenshot", results, e => (
+          chrome.debugger.detach(target),
+          chrome.management.getAll(crx =>
+            chrome.downloads.download({
+              url: "data:image/png;base64," + e.data,
+              filename: b.url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png",
+              saveAs: !0
+            }, (crx = crx.find(v => v.name == "fformat")) && (
+                chrome.management.setEnabled(crx = crx.id, !1),
+                () => chrome.management.setEnabled(crx, !0)
+              )
+            )
+          )
+        ))
+      ),
+      chrome.action.enable(tabId)
+    )).catch(() => chrome.action.enable(tabId));
   }
   chrome.action.onClicked.addListener(run);
   chrome.contextMenus.onClicked.addListener(run);
