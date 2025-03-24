@@ -117,6 +117,6 @@ chrome.runtime.onInstalled.addListener(() =>
     id: "",
     title: "Take Screenshot",
     contexts: ["page", "frame", "link", "editable", "image", "video"],
-    documentUrlPatterns: ["https://*/*", "https://*/", "http://*/*", "http://*/", "file://*/*", "file://*/"]
+    documentUrlPatterns: ["https://*/*", "https://*/", "http://*/*", "http://*/", "file://*/*"]
   })
 );
