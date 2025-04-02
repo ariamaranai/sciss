@@ -29,7 +29,7 @@
         saveVisibleBtn.textContent = "Save Visible";
 
         scaleBtn.addEventListener("click", e =>
-          e.stopImmediatePropagation(scale = +scaleBtn.value),
+          e.stopImmediatePropagation(scale = +scaleBtn.value ),
           1
         );
         saveFullBtn.onclick = () => bg.remove(resolve({
@@ -40,7 +40,7 @@
           clip: { x, y, width, height, scale }
         }));
         bg.appendChild(scaleBtn).setAttribute("style",
-          "all:unset;position:fixed;z-index:2147483647;right:140px;top:0;width:48px;border:1px dashed;background:#444;font:12px/3 fantasy;color:#ddd;text-align:center;cursor:default"
+          "all:unset;position:fixed;z-index:2147483647;right:140px;top:0;width:48px;border:1px dashed;background:#444;font:12px/3 fantasy;color:#ddd;text-align:center;text-overflow:ellipsis;cursor:default"
         );
         bg.appendChild(saveFullBtn).setAttribute("style",
           "all:unset;position:fixed;z-index:2147483647;right:78px;top:0;padding:0 8px;border:1px dashed;background:#0ef;font:12px/3 fantasy;color:#000;cursor:pointer"
