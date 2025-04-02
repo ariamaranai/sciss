@@ -7,8 +7,9 @@
       target,
       func: async () => await new Promise(resolve => {
         let d = document;
-        let root = d.body;
+        let root = d.body || d.documentElement;
         let bg = d.createElement("b");
+        let scaleBtn = d.createElement("input");
         let saveFullBtn = d.createElement("b");
         let saveVisibleBtn = d.createElement("b");
         let x = root.scrollLeft;
@@ -19,17 +20,18 @@
         let scrollTop = 0;
         let scale = devicePixelRatio;
         let rect;
-        bg.appendChild(saveFullBtn).setAttribute("style",
-          "all:unset;position:fixed;z-index:2147483647;right:78px;top:0;padding:8px;border:1px dashed;background:#0ef;font:12px fantasy;color:#000;cursor:pointer"
-        );
-        bg.appendChild(saveVisibleBtn).setAttribute("style",
-          "all:unset;position:fixed;z-index:2147483647;right:0;top:0;padding:8px;border:1px dashed;background:#9f0;font:12px fantasy;color:#000;cursor:pointer"
-        );
-        root.appendChild(bg).setAttribute("style",
-          "all:unset;position:fixed;inset:0;z-index:2147483646;width:100%;height:100%;backdrop-filter:brightness(.8);cursor:crosshair"
-        );
+
+        scaleBtn.type = "number";
+        scaleBtn.min = scaleBtn.step = ".25";
+        scaleBtn.max = "5";
+        scaleBtn.value = scale;
         saveFullBtn.textContent = "Save Full";
         saveVisibleBtn.textContent = "Save Visible";
+
+        scaleBtn.addEventListener("click", e =>
+          e.stopImmediatePropagation(scale = +scaleBtn.value),
+          1
+        );
         saveFullBtn.onclick = () => bg.remove(resolve({
           captureBeyondViewport: !0
         }));
@@ -37,6 +39,18 @@
           captureBeyondViewport: !0,
           clip: { x, y, width, height, scale }
         }));
+        bg.appendChild(scaleBtn).setAttribute("style",
+          "all:unset;position:fixed;z-index:2147483647;right:140px;top:0;width:48px;border:1px dashed;background:#444;font:12px/3 fantasy;color:#ddd;text-align:center;cursor:default"
+        );
+        bg.appendChild(saveFullBtn).setAttribute("style",
+          "all:unset;position:fixed;z-index:2147483647;right:78px;top:0;padding:0 8px;border:1px dashed;background:#0ef;font:12px/3 fantasy;color:#000;cursor:pointer"
+        );
+        bg.appendChild(saveVisibleBtn).setAttribute("style",
+          "all:unset;position:fixed;z-index:2147483647;right:0;top:0;padding:0 8px;border:1px dashed;background:#9f0;font:12px/3 fantasy;color:#000;cursor:pointer"
+        );
+        root.appendChild(bg).setAttribute("style",
+          "all:unset;position:fixed;inset:0;z-index:2147483646;width:100%;height:100%;backdrop-filter:brightness(.8);cursor:crosshair"
+        );
         bg.addEventListener("click", e => {
           if (e.target == bg) {
             let px = CSS.px(0);
@@ -57,6 +71,7 @@
             );
             scrollLeft = root.scrollLeft;
             scrollTop = root.scrollTop;
+            scaleBtn.remove();
             saveFullBtn.remove();
             saveVisibleBtn.remove();
             root.appendChild(rect).setAttribute("style",
@@ -106,7 +121,9 @@
         ))
       ),
       chrome.action.enable(tabId)
-    )).catch(() => chrome.action.enable(tabId));
+    )).catch(e =>
+      e != "Error: Frame with ID 0 was removed." && chrome.action.enable(tabId)
+    );
   }
   chrome.action.onClicked.addListener(run);
   chrome.contextMenus.onClicked.addListener(run);
