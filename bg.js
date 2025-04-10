@@ -5,8 +5,7 @@
     chrome.action.disable(tabId);
     chrome.userScripts.execute({
       target,
-      js: [{
-        code:
+      js: [{ code:
 `(async () => await new Promise(resolve => {
   let d = document;
   let root = d.body || d.documentElement;
