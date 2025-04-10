@@ -19,8 +19,8 @@
     "debugger",
     "downloads",
     "management",
-    "scripting",
-    "tabs"
+    "tabs",
+    "userScripts"
   ],
   "host_permissions": [
     "<all_urls>"
