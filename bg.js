@@ -30,7 +30,7 @@
   saveVisibleBtn.textContent = "Save Visible";
 
   scaleBtn.addEventListener("click", e =>
-    e.stopImmediatePropagation(scale = +scaleBtn.value ),
+    e.stopImmediatePropagation(scale = +scaleBtn.value),
     1
   );
   saveFullBtn.onclick = () => bg.remove(resolve({
@@ -72,9 +72,7 @@
       );
       scrollLeft = root.scrollLeft;
       scrollTop = root.scrollTop;
-      scaleBtn.remove();
-      saveFullBtn.remove();
-      saveVisibleBtn.remove();
+      saveVisibleBtn.remove(saveFullBtn.remove(scaleBtn.remove()));
       root.appendChild(rect).setAttribute("style",
         "height:0;width:0;top:" +
         (y = e.pageY + offsetTop) +
@@ -86,9 +84,7 @@
       rect.addEventListener("mousemove", mousemoveHandler),
       addEventListener("scroll", scrollHandler);
       bg.addEventListener("click", () => (
-        bg.remove(),
-        rect.remove(),
-        removeEventListener("scroll", scrollHandler),
+        rect.remove(bg.remove(removeEventListener("scroll", scrollHandler))),
         resolve({
           captureBeyondViewport: !0,
           clip: { x, y, width, height, scale }
@@ -96,12 +92,9 @@
       ), { once: !0 });
     }
   }, { once: !0 });
-  bg.addEventListener("contextmenu", e => (
-    e.stopImmediatePropagation(),
-    bg.remove(),
-    rect && rect.remove(),
-    resolve()
-  ));
+  bg.addEventListener("contextmenu", e =>
+    resolve(bg.remove(e.stopImmediatePropagation(rect && rect.remove())))
+  );
 }))();`
       }]
     }).then(results => {
