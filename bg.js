@@ -53,7 +53,7 @@
     if (e.target == bg) {
       saveVisibleBtn.remove(saveFullBtn.remove(scaleBtn.remove()));
       root.appendChild(rect = d.createElement("b")).setAttribute("style",
-        "height:0;width:0;top:0;left:0;position:absolute;z-index:2147483647;border:1px dashed #999;box-sizing:border-box;backdrop-filter:brightness(1.2);cursor:crosshair"
+        "width:0;height:0;left:0;top:0;position:absolute;z-index:2147483647;border:1px dashed #999;box-sizing:border-box;backdrop-filter:brightness(1.2);cursor:crosshair"
       );
       let bcr = rect.getBoundingClientRect();
       let px = CSS.px(0);
