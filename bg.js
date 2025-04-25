@@ -49,51 +49,45 @@
   bg.appendChild(saveVisibleBtn).setAttribute("style",
     "all:unset;position:fixed;z-index:2147483647;right:0;top:0;padding:0 8px;border:1px dashed;background:#9f0;font:12px/3 fantasy;color:#000;cursor:pointer"
   );
-  root.appendChild(bg).setAttribute("style",
-    "all:unset;position:fixed;inset:0;z-index:2147483646;width:100%;height:100%;backdrop-filter:brightness(.8);cursor:crosshair"
-  );
   bg.addEventListener("click", e => {
     if (e.target == bg) {
+      saveVisibleBtn.remove(saveFullBtn.remove(scaleBtn.remove()));
+      root.appendChild(rect = d.createElement("b")).setAttribute("style",
+        "height:0;width:0;top:0;left:0;position:absolute;z-index:2147483647;border:1px dashed #999;box-sizing:border-box;backdrop-filter:brightness(1.2);cursor:crosshair"
+      );
+      let bcr = rect.getBoundingClientRect();
       let px = CSS.px(0);
-      let rectStyle = (rect = d.createElement("b")).attributeStyleMap;
-      let offsetTop = root.offsetTop;
-      let offsetX = root.getBoundingClientRect().x;
+      let rectStyleMap = rect.attributeStyleMap;
       let mousemoveHandler = e => (
-        rectStyle.set("height",
-          ((px.value = (height = e.pageY - y + offsetTop) > 0 ? height : height = 1), px)),
-        rectStyle.set("width",
-          ((px.value = (width = e.pageX - x - offsetX) > 0 ? width : width = 1), px))
+        rectStyleMap.set("width", ((px.value = (width = e.pageX - x) > 0 ? width : width = 1), px)),
+        rectStyleMap.set("height", ((px.value = (height = e.pageY - y) > 0 ? height : height = 1), px))
       );
       let scrollHandler = () => (
-        rectStyle.set("height",
-          ((px.value = (height = height - scrollTop + (scrollTop = root.scrollTop)) > 0 ? height : height = 1), px)),
-        rectStyle.set("width",
-          ((px.value = (width = width - scrollLeft + (scrollLeft = root.scrollLeft)) > 0 ? width : width = 1), px))
+        rectStyleMap.set("width", ((px.value = (width = width - scrollLeft + (scrollLeft = root.scrollLeft)) > 0 ? width : width = 1), px)),
+        rectStyleMap.set("height", ((px.value = (height = height - scrollTop + (scrollTop = root.scrollTop)) > 0 ? height : height = 1), px))
       );
+
+      rectStyleMap.set("left", (px.value = x = e.pageX - bcr.x, px));
+      rectStyleMap.set("top", (px.value = y = e.pageY - bcr.y, px));
+      x += bcr.x;
+      y += bcr.y;
       scrollLeft = root.scrollLeft;
       scrollTop = root.scrollTop;
-      saveVisibleBtn.remove(saveFullBtn.remove(scaleBtn.remove()));
-      root.appendChild(rect).setAttribute("style",
-        "height:0;width:0;top:" +
-        (y = e.pageY + offsetTop) +
-        "px;left:" +
-        (x = e.pageX - offsetX) +
-        "px;position:absolute;z-index:2147483647;border:1px dashed #999;box-sizing:border-box;backdrop-filter:brightness(1.2);cursor:crosshair"
-      );
-      bg.addEventListener("mousemove", mousemoveHandler),
-      rect.addEventListener("mousemove", mousemoveHandler),
+
+      rect.addEventListener("mousemove", mousemoveHandler);
+      bg.addEventListener("mousemove", mousemoveHandler);
+      bg.addEventListener("click", () => resolve({
+        captureBeyondViewport: !rect.remove(bg.remove(removeEventListener("scroll", scrollHandler))),
+        clip: { x, y, width, height, scale }
+      }), { once: !0 });
       addEventListener("scroll", scrollHandler);
-      bg.addEventListener("click", () => (
-        rect.remove(bg.remove(removeEventListener("scroll", scrollHandler))),
-        resolve({
-          captureBeyondViewport: !0,
-          clip: { x, y, width, height, scale }
-        })
-      ), { once: !0 });
     }
   }, { once: !0 });
   bg.addEventListener("contextmenu", e =>
     resolve(bg.remove(e.stopImmediatePropagation(rect && rect.remove())))
+  );
+  root.appendChild(bg).setAttribute("style",
+    "all:unset;position:fixed;inset:0;z-index:2147483646;width:100%;height:100%;backdrop-filter:brightness(.8);cursor:crosshair"
   );
 }))();`
       }]
