@@ -67,12 +67,10 @@
         rectStyleMap.set("height", ((px.value = (height = height - scrollTop + (scrollTop = root.scrollTop)) > 0 ? height : height = 1), px))
       );
 
-      rectStyleMap.set("left", (px.value = x = e.pageX - bcr.x, px));
-      rectStyleMap.set("top", (px.value = y = e.pageY - bcr.y, px));
-      x += bcr.x;
-      y += bcr.y;
       scrollLeft = root.scrollLeft;
       scrollTop = root.scrollTop;
+      rectStyleMap.set("left", (px.value = (x = e.pageX) - bcr.x - scrollLeft, px));
+      rectStyleMap.set("top", (px.value = (y = e.pageY) - bcr.y - scrollTop, px));
 
       rect.addEventListener("mousemove", mousemoveHandler);
       bg.addEventListener("mousemove", mousemoveHandler);
