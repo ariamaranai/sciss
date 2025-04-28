@@ -1,11 +1,12 @@
 {
-  let run = (a, b) => {
+  let run = async (a, b) => {
     let tabId = (b ??= a).id;
     let target = { tabId };
     chrome.action.disable(tabId);
-    chrome.userScripts.execute({
-      target,
-      js: [{ code:
+    try {
+      let { result } = (await chrome.userScripts.execute({
+        target,
+        js: [{ code:
 `(async () => await new Promise(resolve => {
   let d = document;
   let root = d.body || d.documentElement;
@@ -82,17 +83,18 @@
     }
   }, { once: !0 });
   bg.addEventListener("contextmenu", e =>
-    resolve(bg.remove(e.stopImmediatePropagation(rect && rect.remove())))
+    resolve(bg.remove(e.stopImmediatePropagation(rect && rect.remove()))),
+    1
   );
   root.appendChild(bg).setAttribute("style",
     "all:unset;position:fixed;inset:0;z-index:2147483646;width:100%;height:100%;backdrop-filter:brightness(.8);cursor:crosshair"
   );
 }))();`
-      }]
-    }).then(results => {
-      (results &&= results[0].result) && (
+        }]
+      }))[0];
+      result && (
         chrome.debugger.attach(target, "1.3"),
-        chrome.debugger.sendCommand(target, "Page.captureScreenshot", results, e => (
+        chrome.debugger.sendCommand(target, "Page.captureScreenshot", result, e => (
           chrome.debugger.detach(target),
           chrome.management.getAll(crx =>
             chrome.downloads.download({
@@ -100,17 +102,14 @@
               filename: b.url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png",
               saveAs: !0
             }, (crx = crx.find(v => v.name == "fformat")) && (
-                chrome.management.setEnabled(crx = crx.id, !1),
-                () => chrome.management.setEnabled(crx, !0)
-              )
-            )
+              chrome.management.setEnabled(crx = crx.id, !1),
+              () => chrome.management.setEnabled(crx, !0)
+            ))
           )
         ))
-      ),
-      chrome.action.enable(tabId)
-    }).catch(e =>
-      e != "Error: Frame with ID 0 was removed." && chrome.action.enable(tabId)
-    );
+      )
+    } catch(e) {}
+    chrome.action.enable(tabId);
   }
   chrome.action.onClicked.addListener(run);
   chrome.contextMenus.onClicked.addListener(run);
