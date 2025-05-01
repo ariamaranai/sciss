@@ -9,7 +9,7 @@
         js: [{ code:
 `(async () => await new Promise(resolve => {
   let d = document;
-  let root = d.body || d.documentElement;
+  let root = d.scrollingElement || d.documentElement;
   let bg = d.createElement("b");
   let x = root.scrollLeft;
   let y = root.scrollTop;
@@ -20,7 +20,7 @@
   let scale = devicePixelRatio;
   let rect;
 
-  bg.innerHTML = "<input value=" + scale + " type=number min=.25 max=5 step=.25 style='all:unset;position:fixed;z-index:2147483647;right:140px;top:0;width:48px;border:1px dashed;background:#444;font:12px/3 fantasy;color:#ddd;text-align:center;text-overflow:ellipsis;cursor:default'><p style='all:unset;position:fixed;z-index:2147483647;right:78px;top:0;padding:0 8px;border:1px dashed;background:#0ef;font:12px/3 fantasy;color:#000;cursor:pointer'>Save Full<p style='all:unset;position:fixed;z-index:2147483647;right:0;top:0;padding:0 8px;border:1px dashed;background:#9f0;font:12px/3 fantasy;color:#000;cursor:pointer'>Save Visible"
+  bg.innerHTML = "<input value=" + scale + " type=number min=.25 max=5 step=.25 style='all:unset;position:fixed;z-index:2147483647;right:144px;top:0;width:48px;font:12px/3 fantasy;border-radius:2px;background:#fff;color:#000;text-align:center;cursor:default'><p style='all:unset;position:fixed;z-index:2147483647;right:80px;top:0;padding:0 8px;border-radius:2px;background:#0ef;font:12px/3 fantasy;color:#000;cursor:pointer'>Save Full</p><p style='all:unset;position:fixed;z-index:2147483647;right:0;top:0;padding:0 8px;border-radius:2px;background:#9f0;font:12px/3 fantasy;color:000;cursor:pointer'>Save Visible"
 
   let scaleBtn = bg.firstChild;
   let saveFullBtn = scaleBtn.nextSibling;
@@ -37,14 +37,11 @@
     captureBeyondViewport: !0,
     clip: { x, y, width, height, scale }
   }));
-  bg.appendChild(saveVisibleBtn).setAttribute("style",
-    "all:unset;position:fixed;z-index:2147483647;right:0;top:0;padding:0 8px;border:1px dashed;background:#9f0;font:12px/3 fantasy;color:#000;cursor:pointer"
-  );
   bg.addEventListener("click", e => {
     if (e.target == bg) {
       saveVisibleBtn.remove(saveFullBtn.remove(scaleBtn.remove()));
       root.appendChild(rect = d.createElement("b")).setAttribute("style",
-        "width:0;height:0;left:0;top:0;position:absolute;z-index:2147483647;border:1px dashed #999;box-sizing:border-box;backdrop-filter:brightness(1.2);cursor:crosshair"
+        "width:0;height:0;left:0;top:0;position:absolute;z-index:2147483647;box-sizing:border-box;border:1px dashed #fff;backdrop-filter:brightness(1.2);cursor:crosshair"
       );
       let bcr = rect.getBoundingClientRect();
       let px = CSS.px(0);
@@ -58,10 +55,8 @@
         rectStyleMap.set("height", ((px.value = (height = height - scrollTop + (scrollTop = root.scrollTop)) > 0 ? height : height = 1), px))
       );
 
-      scrollLeft = root.scrollLeft;
-      scrollTop = root.scrollTop;
-      rectStyleMap.set("left", (px.value = (x = e.pageX) - bcr.x - scrollLeft, px));
-      rectStyleMap.set("top", (px.value = (y = e.pageY) - bcr.y - scrollTop, px));
+      rectStyleMap.set("left", (px.value = (x = e.pageX) - bcr.x - (scrollLeft = root.scrollLeft), px));
+      rectStyleMap.set("top", (px.value = (y = e.pageY) - bcr.y - (scrollTop = root.scrollTop), px));
 
       rect.addEventListener("mousemove", mousemoveHandler);
       bg.addEventListener("mousemove", mousemoveHandler);
@@ -98,8 +93,8 @@
           )
         ))
       )
-    } catch(e) {}
-    chrome.action.enable(tabId);
+    } catch (e) {}
+    chrome.action.enable(tabId).catch(() => 0);
   }
   chrome.action.onClicked.addListener(run);
   chrome.contextMenus.onClicked.addListener(run);
