@@ -15,12 +15,10 @@
   let y = root.scrollTop;
   let width = innerWidth;
   let height = innerHeight;
-  let scrollLeft = 0;
-  let scrollTop = 0;
   let scale = devicePixelRatio;
   let rect;
 
-  bg.innerHTML = "<input value=" + scale + " type=number min=.25 max=5 step=.25 style='all:unset;position:fixed;z-index:2147483647;right:144px;top:0;width:48px;font:12px/3 fantasy;border-radius:2px;background:#fff;color:#000;text-align:center;cursor:default'><p style='all:unset;position:fixed;z-index:2147483647;right:80px;top:0;padding:0 8px;border-radius:2px;background:#0ef;font:12px/3 fantasy;color:#000;cursor:pointer'>Save Full</p><p style='all:unset;position:fixed;z-index:2147483647;right:0;top:0;padding:0 8px;border-radius:2px;background:#9f0;font:12px/3 fantasy;color:000;cursor:pointer'>Save Visible"
+  bg.innerHTML = "<input value=" + scale + " type=number min=.25 max=5 step=.25 style='all:unset;position:fixed;z-index:2147483647;right:144px;top:0;width:48px;font:12px/3 fantasy;border-radius:2px;background:#fff;color:#000;text-align:center;cursor:default'><p style='all:unset;position:fixed;z-index:2147483647;right:80px;top:0;padding:0 8px;border-radius:2px;background:#0ef;font:12px/3 fantasy;color:#000;cursor:pointer'>Save Full</p><p style='all:unset;position:fixed;z-index:2147483647;right:0;top:0;padding:0 8px;border-radius:2px;background:#9f0;font:12px/3 fantasy;color:#000;cursor:pointer'>Save Visible"
 
   let scaleBtn = bg.firstChild;
   let saveFullBtn = scaleBtn.nextSibling;
@@ -43,6 +41,7 @@
       root.appendChild(rect = d.createElement("b")).setAttribute("style",
         "width:0;height:0;left:0;top:0;position:absolute;z-index:2147483647;box-sizing:border-box;border:1px dashed #fff;backdrop-filter:brightness(1.2);cursor:crosshair"
       );
+      let { scrollLeft, scrollTop } = root;
       let bcr = rect.getBoundingClientRect();
       let px = CSS.px(0);
       let rectStyleMap = rect.attributeStyleMap;
@@ -55,8 +54,8 @@
         rectStyleMap.set("height", ((px.value = (height = height - scrollTop + (scrollTop = root.scrollTop)) > 0 ? height : height = 1), px))
       );
 
-      rectStyleMap.set("left", (px.value = (x = e.pageX) - bcr.x - (scrollLeft = root.scrollLeft), px));
-      rectStyleMap.set("top", (px.value = (y = e.pageY) - bcr.y - (scrollTop = root.scrollTop), px));
+      rectStyleMap.set("left", (px.value = (x = e.pageX) - bcr.x - scrollLeft, px));
+      rectStyleMap.set("top", (px.value = (y = e.pageY) - bcr.y - scrollTop, px));
 
       rect.addEventListener("mousemove", mousemoveHandler);
       bg.addEventListener("mousemove", mousemoveHandler);
@@ -68,7 +67,7 @@
     }
   }, { once: !0 });
   bg.addEventListener("contextmenu", e =>
-    resolve(bg.remove(e.stopImmediatePropagation(rect && rect.remove()))),
+    resolve(bg.remove(e.stopImmediatePropagation(rect?.remove()))),
     1
   );
   root.appendChild(bg).setAttribute("style",
