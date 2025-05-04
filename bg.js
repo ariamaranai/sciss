@@ -82,7 +82,7 @@
           let crx = await chrome.management.getAll();
           chrome.downloads.download({
             url: "data:image/png;base64," + (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", result)).data,
-            filename: b.url.replace(/^.*?:\/\//, "").replace(/\/$/, "").replace(/[|?":/<>*\\]/g, "_") + ".png",
+            filename: b.url.replace(/^.*?:\/\/|\/$/g, "").replace(/[|?":/<>*\\]/g, "_") + ".png",
             saveAs: !0
           }, (crx = crx.find(v => v.name == "fformat")) && (
             chrome.management.setEnabled(crx = crx.id, !1),
