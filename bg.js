@@ -2,9 +2,9 @@
   let run = async (a, b) => {
     let tabId = (b ??= a).id;
     let target = { tabId };
+    chrome.action.disable(tabId);
     try {
-      chrome.action.disable(tabId);
-      chrome.debugger.attach(target, "1.3");
+      await chrome.debugger.attach(target, "1.3");
       chrome.debugger.sendCommand(target, "Emulation.setScrollbarsHidden", { hidden: !0 });
       let { result } = (await chrome.userScripts.execute({
         target,
@@ -91,7 +91,9 @@
       }
     } catch (e) {}
     chrome.action.enable(tabId).catch(() => 0);
-    chrome.debugger.detach(target).then(() => chrome.debugger.sendCommand(target, "Emulation.setScrollbarsHidden", { hidden: !1 })).catch(() => 0);
+    chrome.debugger.detach(target).then(() =>
+      chrome.debugger.sendCommand(target, "Emulation.setScrollbarsHidden", { hidden: !1 })
+    ).catch(() => 0);
   }
   chrome.action.onClicked.addListener(run);
   chrome.contextMenus.onClicked.addListener(run);
