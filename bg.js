@@ -41,7 +41,7 @@
     if (e.target == bg) {
       saveVisibleBtn.remove(saveFullBtn.remove(scaleBtn.remove()));
       root.appendChild(rect = d.createElement("b")).setAttribute("style",
-        "width:0;height:0;left:0;top:0;position:absolute;z-index:2147483647;box-sizing:border-box;border:1px dashed #fff;backdrop-filter:brightness(1.2);cursor:crosshair"
+        "width:0;height:0;position:absolute;inset:0;z-index:2147483647;box-sizing:border-box;border:1px dashed #fff;backdrop-filter:brightness(1.2);cursor:crosshair"
       );
       let { scrollLeft, scrollTop } = root;
       let bcr = rect.getBoundingClientRect();
