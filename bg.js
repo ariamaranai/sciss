@@ -79,21 +79,24 @@
         }]
       }))[0];
       if (result) {
-          let crx = await chrome.management.getAll();
-          chrome.downloads.download({
-            url: "data:image/png;base64," + (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", result)).data,
-            filename: b.url.replace(/^.*?:\/\/|\/$/g, "").replace(/[|?":/<>*\\]/g, "_") + ".png",
-            saveAs: !0
-          }, (crx = crx.find(v => v.name == "fformat")) && (
-            chrome.management.setEnabled(crx = crx.id, !1),
-            () => chrome.management.setEnabled(crx, !0)
-          ));
+        let crx = await chrome.management.getAll();
+        if (crx = crx.find(v => v.name == "fformat")) {
+          let f = () => (
+            chrome.management.setEnabled(crx, !0),
+            chrome.downloads.onCreated.removeListener(f)
+          );
+          chrome.management.setEnabled(crx = crx.id, !1);
+          chrome.downloads.onCreated.addListener(f);
+        }
+        chrome.downloads.download({
+          url: "data:image/png;base64," + (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", result)).data,
+          filename: b.url.replace(/^.*?:\/\/|\/$/g, "").replace(/[|?":/<>*\\]/g, "_") + ".png",
+          saveAs: !0
+        });
       }
     } catch (e) {}
     chrome.action.enable(tabId).catch(() => 0);
-    chrome.debugger.detach(target).then(() =>
-      chrome.debugger.sendCommand(target, "Emulation.setScrollbarsHidden", { hidden: !1 })
-    ).catch(() => 0);
+    chrome.debugger.detach(target).then(() => chrome.debugger.sendCommand(target, "Emulation.setScrollbarsHidden", { hidden: !1 })).catch(() => 0);
   }
   chrome.action.onClicked.addListener(run);
   chrome.contextMenus.onClicked.addListener(run);
