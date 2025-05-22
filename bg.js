@@ -88,9 +88,12 @@
           chrome.management.setEnabled(crx = crx.id, !1);
           chrome.downloads.onCreated.addListener(f);
         }
+        let filename = b.url;
+        let len = filename.length;
+        filename = decodeURIComponent(filename.slice(filename[0] != "f" ? filename[5] ==":" ? 8 : 7 : 9, len - (filename[len -1] == "/"))).replace(/[|?":/<>*\\]/g, "_");
         chrome.downloads.download({
           url: "data:image/png;base64," + (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", result)).data,
-          filename: b.url.replace(/^.*?:\/\/|\/$/g, "").replace(/[|?":/<>*\\]/g, "_") + ".png",
+          filename,
           saveAs: !0
         });
       }
