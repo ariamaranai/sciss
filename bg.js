@@ -90,7 +90,7 @@
         }
         let filename = b.url;
         let len = filename.length;
-        filename = decodeURIComponent(filename.slice(filename[0] != "f" ? filename[5] ==":" ? 8 : 7 : 9, len - (filename[len -1] == "/"))).replace(/[|?":/<>*\\]/g, "_");
+        filename = decodeURIComponent(filename.slice(filename[0] != "f" ? filename[5] ==":" ? 8 : 7 : 9, len - (filename[len -1] == "/"))).replace(/[|?":/<>*\\]/g, "_") + ".png";
         chrome.downloads.download({
           url: "data:image/png;base64," + (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", result)).data,
           filename,
@@ -105,14 +105,11 @@
   chrome.contextMenus.onClicked.addListener(run);
   chrome.commands.onCommand.addListener(run);
 }
-chrome.runtime.onInstalled.addListener(() => (
-  chrome.userScripts.configureWorld({
-    messaging: !0
-  }),
+chrome.runtime.onInstalled.addListener(() =>
   chrome.contextMenus.create({
     id: "",
     title: "Take Screenshot",
     contexts: ["page", "frame", "link", "editable", "image", "video"],
     documentUrlPatterns: ["https://*/*", "http://*/*", "file://*"]
   })
-));
+);
