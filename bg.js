@@ -12,7 +12,7 @@
 `(async () => await new Promise(resolve => {
   let d = document;
   let root = d.scrollingElement || d.documentElement;
-  let bg = d.createElement("b");
+  let bg = root.appendChild(d.createElement("b"));
   let x = root.scrollLeft;
   let y = root.scrollTop;
   let width = innerWidth;
@@ -40,9 +40,7 @@
   bg.addEventListener("click", e => {
     if (e.target == bg) {
       saveVisibleBtn.remove(saveFullBtn.remove(scaleBtn.remove()));
-      root.appendChild(rect = d.createElement("b")).setAttribute("style",
-        "width:0;height:0;position:absolute;inset:0;z-index:2147483647;box-sizing:border-box;border:1px dashed #fff;backdrop-filter:brightness(1.2);cursor:crosshair"
-      );
+      root.appendChild(rect = d.createElement("b")).setAttribute("style", "width:0;height:0;position:absolute;inset:0;z-index:2147483647;box-sizing:border-box;border:1px dashed #fff;backdrop-filter:brightness(1.2);cursor:crosshair");
       let { scrollLeft, scrollTop } = root;
       let bcr = rect.getBoundingClientRect();
       let px = CSS.px(0);
@@ -72,9 +70,7 @@
     resolve(bg.remove(e.stopImmediatePropagation(rect?.remove()))),
     1
   );
-  root.appendChild(bg).setAttribute("style",
-    "all:unset;position:fixed;inset:0;z-index:2147483646;width:100%;height:100%;backdrop-filter:brightness(.8);cursor:crosshair"
-  );
+  bg.setAttribute("style", "all:unset;position:fixed;inset:0;z-index:2147483646;width:100%;height:100%;backdrop-filter:brightness(.8);cursor:crosshair");
 }))();`
         }]
       }))[0];
