@@ -1,8 +1,9 @@
 {
   let run = async (a, b) => {
     let tabId = (b ??= a).id;
-    let target = { tabId };
+    tabId < 0 && (tabId = (await chrome.tabs.query({ active: !0, currentWindow: !0 }))[0].id)
     chrome.action.disable(tabId);
+    let target = { tabId };
     try {
       await chrome.debugger.attach(target, "1.3");
       chrome.debugger.sendCommand(target, "Emulation.setScrollbarsHidden", { hidden: !0 });
