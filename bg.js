@@ -30,7 +30,7 @@
           saveAs: !0
         });
       }
-    } catch (e) {}
+    } catch {}
     chrome.action.enable(tabId).catch(() => 0);
     chrome.debugger.detach(target).then(() => chrome.debugger.sendCommand(target, "Emulation.setScrollbarsHidden", { hidden: !1 })).catch(() => 0);
   }
