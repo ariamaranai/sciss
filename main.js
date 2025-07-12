@@ -15,17 +15,20 @@
   let saveFullBtn = scaleBtn.nextSibling;
   let saveVisibleBtn = bg.lastChild;
 
-  scaleBtn.addEventListener("click", e =>
-    e.stopImmediatePropagation(scale = +scaleBtn.value),
-    1
-  );
-  saveFullBtn.onclick = () => bg.remove(resolve({
-    captureBeyondViewport: !0
-  }));
-  saveVisibleBtn.onclick = () => bg.remove(resolve({
+  let generate = (a, b, c, d) => resolve({
     captureBeyondViewport: !0,
-    clip: { x, y, width, height, scale }
-  }));
+    clip: {
+      x: a,
+      y: b,
+      width: c,
+      height: d,
+      scale
+    }
+  });
+
+  scaleBtn.addEventListener("click", e => e.stopImmediatePropagation(scale = +scaleBtn.value), 1);
+  saveFullBtn.onclick = () => bg.remove(generate(0, 0, root.scrollWidth * scale,  root.scrollHeight * scale));
+  saveVisibleBtn.onclick = () => bg.remove(generate(x * scale, y * scale, width * scale,  height * scale));
   bg.addEventListener("click", e => {
     if (e.target == bg) {
       saveVisibleBtn.remove(saveFullBtn.remove(scaleBtn.remove()));
@@ -48,10 +51,10 @@
 
       rect.addEventListener("mousemove", mousemoveHandler);
       bg.addEventListener("mousemove", mousemoveHandler);
-      bg.addEventListener("click", () => resolve({
-        captureBeyondViewport: !rect.remove(bg.remove(removeEventListener("scroll", scrollHandler))),
-        clip: { x, y, width, height, scale }
-      }), { once: !0 });
+      bg.addEventListener("click", () => (
+        generate(x * scale, y * scale, width * scale, height * scale),
+        rect.remove(bg.remove(removeEventListener("scroll", scrollHandler)))
+      ), { once: !0 });
       addEventListener("scroll", scrollHandler);
     }
   }, { once: !0 });
