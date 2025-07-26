@@ -32,7 +32,7 @@
   bg.addEventListener("click", e => {
     if (e.target == bg) {
       saveVisibleBtn.remove(saveFullBtn.remove(scaleBtn.remove()));
-      root.appendChild(rect = d.createElement("b")).setAttribute("style", "width:0;height:0;position:absolute;inset:0;z-index:2147483647;box-sizing:border-box;border:1px dashed #fff;backdrop-filter:brightness(1.2);cursor:crosshair");
+      root.appendChild(rect = d.createElement("b")).setAttribute("style", "display:flow;width:0;height:0;position:absolute;inset:0;z-index:2147483647;box-sizing:border-box;border:1px dashed #fff;backdrop-filter:brightness(1.2);cursor:crosshair");
       let { scrollLeft, scrollTop } = root;
       let bcr = rect.getBoundingClientRect();
       let px = CSS.px(0);
