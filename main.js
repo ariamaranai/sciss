@@ -35,7 +35,6 @@
         scale
       }
     });
-
     addEventListener("resize", resizeHandler = () => zoom = devicePixelRatio, 1);
     bg.addEventListener("click", e => {
       if (e.target == bg) {
@@ -53,13 +52,13 @@
         rectStyleMap.set("top", (px.value = (y = e.pageY) - bcr.y - scrollTop, px));
         rect.addEventListener("mousemove", mousemoveHandler);
         bg.addEventListener("mousemove", mousemoveHandler);
-        bg.addEventListener("click", () => success(x, y, width, height), { once: !0 });
+        bg.addEventListener("click", () => success(x, y, width, height), { capture: !0, once: !0 });
         addEventListener("scroll", scrollHandler = () => (
           rectStyleMap.set("width", ((px.value = (width = width - scrollLeft + (scrollLeft = root.scrollLeft)) > 0 ? width : width = 1), px)),
           rectStyleMap.set("height", ((px.value = (height = height - scrollTop + (scrollTop = root.scrollTop)) > 0 ? height : height = 1), px))
         ));
       }
-    }, { once: !0 });
+    }, { capture: !0, once: !0 });
     bg.addEventListener("contextmenu", e => resolve(e.stopImmediatePropagation()), 1);
   });
 
