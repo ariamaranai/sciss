@@ -17,7 +17,7 @@
     bg.setAttribute("style", "all:unset;position:fixed;inset:0;z-index:2147483646;width:100%;height:100%;backdrop-filter:brightness(.8);cursor:crosshair");
 
     let scaleBtn = bg.firstChild;
-    scaleBtn.addEventListener("click", e => e.stopImmediatePropagation(scale = +scaleBtn.value), 1);
+    scaleBtn.addEventListener("change", e => e.stopImmediatePropagation(scale = Math.max(Math.min(+e.target.value, 5), .25)), 1);
 
     let saveFullBtn = scaleBtn.nextSibling;
     saveFullBtn.onclick = () => success(0, 0, root.scrollWidth, root.scrollHeight);
@@ -39,7 +39,7 @@
     bg.addEventListener("click", e => {
       if (e.target == bg) {
         saveVisibleBtn.remove(saveFullBtn.remove(scaleBtn.remove()));
-        root.appendChild(rect = d.createElement("dt")).setAttribute("style", "width:0;height:0;position:absolute;inset:0;z-index:2147483647;box-sizing:border-box;border:1px dashed#fff;backdrop-filter:brightness(1.2);cursor:crosshair");
+        root.appendChild(rect = d.createElement("dt")).setAttribute("style", "all:unset;width:0;height:0;position:absolute;inset:0;z-index:2147483647;box-sizing:border-box;border:1px dashed#fff;backdrop-filter:brightness(1.2);cursor:crosshair");
         let { scrollLeft, scrollTop } = root;
         let bcr = rect.getBoundingClientRect();
         let px = CSS.px(0);
