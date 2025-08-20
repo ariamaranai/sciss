@@ -12,8 +12,18 @@
     let height = innerHeight;
     let zoom = devicePixelRatio;
     let scale = 1;
+    let success = (a, b, c, d) => resolve({
+      captureBeyondViewport: !0,
+      clip: {
+        x: a * zoom,
+        y: b * zoom,
+        width: c * zoom,
+        height: d * zoom,
+        scale
+      }
+    });
 
-    (bg = root.appendChild(d.createElement("z"))).innerHTML = "<input type=number value=1 min=.25 max=5 step=.25 style='all:unset;position:fixed;z-index:2147483647;right:144px;top:0;width:48px;background:#fff;font:12px/3 fantasy;border-radius:2px;color:#000;text-align:center;cursor:default'><p style='all:unset;position:fixed;z-index:2147483647;right:80px;top:0;padding:0+8px;border-radius:2px;background:#0ef;font:12px/3 fantasy;color:#000;cursor:pointer'>Save Full<p style='all:unset;position:fixed;z-index:2147483647;right:0;top:0;padding:0+8px;border-radius:2px;background:#9f0;font:12px/3 fantasy;color:#000;cursor:pointer'>Save Visible"
+    (bg = root.appendChild(d.createElement("z"))).innerHTML = "<input type=number value=1 min=.25 max=5 step=.25 style='all:unset;position:fixed;z-index:2147483647;right:144px;top:0;width:48px;background:#fff;font:12px/3 fantasy;border-radius:2px;color:#000;text-align:center;cursor:default'><p style='all:unset;position:fixed;z-index:2147483647;right:80px;top:0;padding:0+8px;border-radius:2px;background:#0ef;font:12px/3 fantasy;color:#000;cursor:pointer'>Save Full<p style='all:unset;position:fixed;z-index:2147483647;right:0;top:0;padding:0+8px;border-radius:2px;background:#9f0;font:12px/3 fantasy;color:#000;cursor:pointer'>Save Visible";
     bg.setAttribute("style", "all:unset;position:fixed;inset:0;z-index:2147483646;width:100%;height:100%;backdrop-filter:brightness(.8);cursor:crosshair");
 
     let scaleBtn = bg.firstChild;
@@ -25,16 +35,6 @@
     let saveVisibleBtn = bg.lastChild;
     saveVisibleBtn.onclick = () => success(x, y, width,  height);
 
-    let success = (a, b, c, d) => resolve({
-      captureBeyondViewport: !0,
-      clip: {
-        x: a * zoom,
-        y: b * zoom,
-        width: c * zoom,
-        height: d * zoom,
-        scale
-      }
-    });
     addEventListener("resize", resizeHandler = () => zoom = devicePixelRatio, 1);
     bg.addEventListener("click", e => {
       if (e.target == bg) {
