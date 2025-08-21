@@ -1,6 +1,6 @@
 {
   let run = async (a, b) => {
-    let tabId = (b ??= a).id;
+    let tabId = (b || a).id;
     tabId < 0 && (tabId = (await chrome.tabs.query({ active: !0, currentWindow: !0 }))[0].id);
     chrome.action.disable(tabId);
     let target = { tabId };
@@ -21,7 +21,7 @@
           chrome.management.setEnabled(crx = crx.id, !1);
           chrome.downloads.onCreated.addListener(f);
         }
-        let filename = b.url;
+        let filename = (b || a).url;
         let len = filename.length;
         filename = decodeURIComponent(filename.slice(filename[0] != "f" ? filename[5] ==":" ? 8 : 7 : 9, len - (filename[len -1] == "/"))).replace(/[|?":/<>*\\]/g, "_") + ".png";
         chrome.downloads.download({
@@ -32,7 +32,9 @@
       }
     } catch {}
     chrome.action.enable(tabId).catch(() => 0);
-    chrome.debugger.detach(target).then(() => chrome.debugger.sendCommand(target, "Emulation.setScrollbarsHidden", { hidden: !1 })).catch(() => 0);
+    chrome.debugger.detach(target)
+    .then(() => chrome.debugger.sendCommand(target, "Emulation.setScrollbarsHidden", { hidden: !1 }))
+    .catch(() => 0);
   }
   chrome.action.onClicked.addListener(run);
   chrome.contextMenus.onClicked.addListener(run);
