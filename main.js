@@ -23,7 +23,7 @@
       }
     });
 
-    (bg = root.appendChild(d.createElement("z"))).innerHTML = "<input type=number value=1 min=.25 max=5 step=.25 style='all:unset;position:fixed;z-index:2147483647;right:144px;top:0;width:48px;background:#fff;font:12px/3 fantasy;border-radius:2px;color:#000;text-align:center;cursor:default'><p style='all:unset;position:fixed;z-index:2147483647;right:80px;top:0;padding:0+8px;border-radius:2px;background:#0ef;font:12px/3 fantasy;color:#000;cursor:pointer'>Save Full<p style='all:unset;position:fixed;z-index:2147483647;right:0;top:0;padding:0+8px;border-radius:2px;background:#9f0;font:12px/3 fantasy;color:#000;cursor:pointer'>Save Visible";
+    (bg = root.appendChild(d.createElement("bg"))).innerHTML = "<input type=number value=1 min=.25 max=5 step=.25 style='all:unset;position:fixed;z-index:2147483647;right:144px;top:0;width:48px;background:#fff;font:12px/3 fantasy;border-radius:2px;color:#000;text-align:center;cursor:default'><p style='all:unset;position:fixed;z-index:2147483647;right:80px;top:0;padding:0+8px;border-radius:2px;background:#0ef;font:12px/3 fantasy;color:#000;cursor:pointer'>Save Full<p style='all:unset;position:fixed;z-index:2147483647;right:0;top:0;padding:0+8px;border-radius:2px;background:#9f0;font:12px/3 fantasy;color:#000;cursor:pointer'>Save Visible";
     bg.setAttribute("style", "all:unset;position:fixed;inset:0;z-index:2147483647;width:100vw;height:100vh;backdrop-filter:brightness(.8);cursor:crosshair");
 
     let scaleBtn = bg.firstChild;
@@ -39,7 +39,7 @@
     bg.addEventListener("click", e => {
       if (e.target == bg) {
         saveVisibleBtn.remove(saveFullBtn.remove(scaleBtn.remove()));
-        root.appendChild(rect = d.createElement("dt")).setAttribute("style", "all:unset;width:0;height:0;position:absolute;inset:0;z-index:2147483647;box-sizing:border-box;border:1px dashed#fff;backdrop-filter:brightness(1.2);cursor:crosshair");
+        root.appendChild(rect = d.createElement("rect")).setAttribute("style", "all:unset;width:0;height:0;position:absolute;inset:0;z-index:2147483647;box-sizing:border-box;border:1px dashed#fff;backdrop-filter:brightness(1.2);cursor:crosshair");
         let { scrollLeft, scrollTop } = root;
         let bcr = rect.getBoundingClientRect();
         let px = CSS.px(0);
