@@ -1,10 +1,10 @@
 (async () => {
   let bg;
-  let rect;
+  let d = document;
+  let rect = d.createElement("rc");
   let resizeHandler;
   let scrollHandler;
   let value = await new Promise(resolve => {
-    let d = document;
     let root = d.scrollingElement;
     let x = root.scrollLeft;
     let y = root.scrollTop;
@@ -12,7 +12,7 @@
     let height = innerHeight;
     let zoom = devicePixelRatio;
     let scale = 1;
-    let success = (a, b, c, d) => resolve({
+    let clip = (a, b, c, d) => resolve({
       captureBeyondViewport: !0,
       clip: {
         x: a * zoom,
@@ -30,16 +30,18 @@
     scaleBtn.addEventListener("change", e => e.stopImmediatePropagation(scale = Math.max(Math.min(+e.target.value, 5), .25)), 1);
 
     let saveFullBtn = scaleBtn.nextSibling;
-    saveFullBtn.onclick = () => success(0, 0, root.scrollWidth, root.scrollHeight);
+    saveFullBtn.onclick = () => clip(0, 0, root.scrollWidth, root.scrollHeight);
 
     let saveVisibleBtn = bg.lastChild;
-    saveVisibleBtn.onclick = () => success(x, y, width,  height);
+    saveVisibleBtn.onclick = () => clip(x, y, width,  height);
 
     addEventListener("resize", resizeHandler = () => zoom = devicePixelRatio, 1);
-    bg.addEventListener("click", e => {
+
+    let clickHandler = e => {
       if (e.target == bg) {
-        saveVisibleBtn.remove(saveFullBtn.remove(scaleBtn.remove()));
-        root.appendChild(rect = d.createElement("rect")).setAttribute("style", "all:unset;width:0;height:0;position:absolute;inset:0;z-index:2147483647;box-sizing:border-box;border:1px dashed#fff;backdrop-filter:brightness(1.2);cursor:crosshair");
+        bg.textContent = "";
+        bg.removeEventListener("click", clickHandler, 1);
+        root.appendChild(rect).setAttribute("style", "all:unset;width:0;height:0;position:absolute;inset:0;z-index:2147483647;box-sizing:border-box;border:1px dashed#fff;backdrop-filter:brightness(1.2);cursor:crosshair");
         let { scrollLeft, scrollTop } = root;
         let bcr = rect.getBoundingClientRect();
         let px = CSS.px(0);
@@ -52,19 +54,19 @@
         rectStyleMap.set("top", (px.value = (y = e.pageY) - bcr.y - scrollTop, px));
         rect.addEventListener("mousemove", mousemoveHandler);
         bg.addEventListener("mousemove", mousemoveHandler);
-        bg.addEventListener("click", () => success(x, y, width, height), { capture: !0, once: !0 });
+        bg.addEventListener("click", () => clip(x, y, width, height), { capture: !0, once: !0 });
         addEventListener("scroll", scrollHandler = () => (
           rectStyleMap.set("width", ((px.value = (width = width - scrollLeft + (scrollLeft = root.scrollLeft)) > 0 ? width : width = 1), px)),
           rectStyleMap.set("height", ((px.value = (height = height - scrollTop + (scrollTop = root.scrollTop)) > 0 ? height : height = 1), px))
         ));
       }
-    }, { capture: !0, once: !0 });
+    }
+    bg.addEventListener("click", clickHandler, 1);
     bg.addEventListener("contextmenu", e => resolve(e.stopImmediatePropagation()), 1);
   });
-
   bg.remove();
   rect?.remove();
-  removeEventListener("resize", resizeHandler);
+  removeEventListener("resize", resizeHandler, 1);
   scrollHandler && removeEventListener("scroll", scrollHandler);
   return value;
 })();
