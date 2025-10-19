@@ -16,11 +16,9 @@
   },
   "permissions": [
     "contextMenus",
-    "clipboardWrite",
     "debugger",
     "downloads",
     "management",
-    "offscreen",
     "tabs",
     "userScripts"
   ],
