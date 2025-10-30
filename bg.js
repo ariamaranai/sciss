@@ -7,26 +7,26 @@
     try {
       await chrome.debugger.attach(target, "1.3");
       chrome.debugger.sendCommand(target, "Emulation.setScrollbarsHidden", { hidden: !0 });
-      let { result } = (await chrome.userScripts.execute({
+      let result = (await chrome.userScripts.execute({
         target,
         js: [{ file: "main.js" }]
-      }))[0];
+      }))[0].result;
       if (result) {
-        let crx = await chrome.management.getAll();
-        if (crx = crx.find(v => v.name == "fformat")) {
-          let f = () => (
-            chrome.management.setEnabled(crx, !0),
-            chrome.downloads.onCreated.removeListener(f)
+        let crx = (await chrome.management.getAll()).find(v => v.name == "fformat");
+        if (crx) {
+          let id = crx.id;
+          chrome.management.setEnabled(id, !1);
+          let onDownloadsCreated = () => (
+            chrome.management.setEnabled(id, !0),
+            chrome.downloads.onCreated.removeListener(onDownloadsCreated)
           );
-          chrome.management.setEnabled(crx = crx.id, !1);
-          chrome.downloads.onCreated.addListener(f);
+          chrome.downloads.onCreated.addListener(onDownloadsCreated);
         }
         let filename = (b || a).url;
         let len = filename.length;
-        filename = decodeURIComponent(filename.slice(filename[0] != "f" ? filename[5] ==":" ? 8 : 7 : 9, len - (filename[len -1] == "/"))).replace(/[|?":/<>*\\]/g, "_") + ".png";
         chrome.downloads.download({
           url: "data:image/png;base64," + (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", result)).data,
-          filename,
+          filename: decodeURIComponent(filename.slice(filename[0] != "f" ? filename[5] ==":" ? 8 : 7 : 9, len - (filename[len - 1] == "/"))).replace(/[|?":/<>*\\]/g, "_") + ".png",
           saveAs: !0
         });
       }
