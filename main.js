@@ -97,6 +97,7 @@
   bg.remove();
   rect?.remove();
   removeEventListener("resize", onResize, 1);
+  onScroll && removeEventListener("scroll", onScroll);
   let i = 0;
   while (i < styleChanged.length) {
     let node = styleChanged[i];
