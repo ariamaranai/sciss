@@ -7,9 +7,10 @@
     try {
       await chrome.debugger.attach(target, "1.3");
       chrome.debugger.sendCommand(target, "Emulation.setScrollbarsHidden", { hidden: !0 });
-      let result = (await chrome.userScripts.execute({
+      let result = (await chrome.scripting.executeScript({
         target,
-        js: [{ file: "main.js" }]
+        world: "MAIN",
+        files: ["main.js"]
       }))[0].result;
       if (result) {
         let crx = (await chrome.management.getAll()).find(v => v.name == "fformat");
