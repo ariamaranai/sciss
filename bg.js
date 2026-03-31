@@ -9,7 +9,6 @@
       chrome.debugger.sendCommand(target, "Emulation.setScrollbarsHidden", { hidden: !0 });
       let result = (await chrome.scripting.executeScript({
         target,
-        world: "MAIN",
         files: ["main.js"]
       }))[0].result;
       if (result) {
