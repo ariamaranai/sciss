@@ -44,7 +44,7 @@
           scale
         }
       });
-    
+
       addEventListener("resize", onResize = () => zoom = devicePixelRatio, 1);
 
       (bg = root.appendChild(d.createElement("bg"))).innerHTML = "<input type=number value=1 min=.25 max=5 step=.25 style='all:unset;position:fixed;z-index:2147483647;right:156px;top:0;width:48px;background:#fff;font:12px/3 arial;border-radius:2px;color:#000;text-align:center;cursor:default'><p style='all:unset;position:fixed;z-index:2147483647;right:86px;top:0;padding:0+8px;border-radius:2px;background:#0ef;font:12px/3 arial;color:#000;cursor:pointer'>Save Full<p style='all:unset;position:fixed;z-index:2147483647;right:0;top:0;padding:0+8px;border-radius:2px;background:#9f0;font:12px/3 arial;color:#000;cursor:pointer'>Save Visible";
@@ -67,26 +67,17 @@
           let scrollLeft = root.scrollLeft;
           let scrollTop = root.scrollTop;
           let bcr = rect.getBoundingClientRect();
-          let px = CSS.px(0);
-          let rectStyleMap = rect.attributeStyleMap;
           let onMouseMove = e => (
-            px.value = width = Math.max(e.pageX - x, 1),
-            rectStyleMap.set("width", px),
-            px.value = height = Math.max(e.pageY - y, 1),
-            rectStyleMap.set("height", px)
+            rect.style.width = (width = Math.max(e.pageX - x, 1)) + "px",
+            rect.style.height = (height = Math.max(e.pageY - y, 1)) + "px"
           );
-          px.value = (x = e.pageX) - bcr.x - scrollLeft;
-          rectStyleMap.set("left",  px);
-          px.value = (y = e.pageY) - bcr.y - scrollTop;
-          rectStyleMap.set("top", px);
+          rect.style.inset = ((y = e.pageY) - bcr.y - scrollTop) + "px+0+0+" + ((x = e.pageX) - bcr.x - scrollLeft) + "px";
           rect.addEventListener("mousemove", onMouseMove);
           bg.addEventListener("mousemove", onMouseMove);
           bg.addEventListener("click", () => clip(x, y, width, height), { capture: !0, once: !0 });
           addEventListener("scroll", onScroll = () => (
-            px.value = width = Math.max(width - scrollLeft + (scrollLeft = root.scrollLeft), 1),
-            rectStyleMap.set("width", px),
-            px.value = height = Math.max(height - scrollTop + (scrollTop = root.scrollTop), 1),
-            rectStyleMap.set("height", px)
+            rect.style.width = Math.max(width - scrollLeft + (scrollLeft = root.scrollLeft), 1) + "px",
+            rect.style.height = height = Math.max(height - scrollTop + (scrollTop = root.scrollTop), 1) + "px"
           ));
         }
       }
