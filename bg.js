@@ -32,9 +32,9 @@
       }
     } catch {}
     chrome.action.enable(tabId).catch(() => 0);
-    chrome.debugger.detach(target)
-    .then(() => chrome.debugger.sendCommand(target, "Emulation.setScrollbarsHidden", { hidden: !1 }))
-    .catch(() => 0);
+    return chrome.debugger.detach(target)
+      .then(() => chrome.debugger.sendCommand(target, "Emulation.setScrollbarsHidden", { hidden: !1 }))
+      .catch(() => 0);
   }
   chrome.action.onClicked.addListener(run);
   chrome.contextMenus.onClicked.addListener(run);
