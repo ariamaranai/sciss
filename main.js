@@ -11,7 +11,7 @@
       let walker = document.createTreeWalker(root, 1);
       let node = walker.currentNode;
       while (node) {
-        let overflowY = node.computedStyleMap().get("overflow-y").value;
+        let overflowY = getComputedStyle(node).overflowY;
         if (overflowY == "auto" || overflowY == "scroll") {
           styleChanged.push(node, node.getAttribute("style"));
           let style = node.style;
@@ -47,7 +47,7 @@
 
       addEventListener("resize", onResize = () => zoom = devicePixelRatio, 1);
 
-      (bg = root.appendChild(d.createElement("bg"))).innerHTML = "<input type=number value=1 min=.25 max=5 step=.25 style='all:unset;position:fixed;z-index:2147483647;right:156px;top:0;width:48px;background:#fff;font:12px/3 arial;border-radius:2px;color:#000;text-align:center;cursor:default'><p style='all:unset;position:fixed;z-index:2147483647;right:86px;top:0;padding:0+8px;border-radius:2px;background:#0ef;font:12px/3 arial;color:#000;cursor:pointer'>Save Full<p style='all:unset;position:fixed;z-index:2147483647;right:0;top:0;padding:0+8px;border-radius:2px;background:#9f0;font:12px/3 arial;color:#000;cursor:pointer'>Save Visible";
+      (bg = root.appendChild(d.createElement("bg"))).innerHTML = "<input type=number value=1 min=.25 max=5 step=.25 style='all:unset;position:fixed;z-index:2147483647;right:156px;top:0;width:48px;background-color:#fff;font:12px/3 arial;border-radius:2px;color:#000;text-align:center;cursor:default'><p style='all:unset;position:fixed;z-index:2147483647;right:86px;top:0;padding-inline:8px;border-radius:2px;background:#0ef;font:12px/3 arial;color:#000;cursor:pointer'>Save Full<p style='all:unset;position:fixed;z-index:2147483647;right:0;top:0;padding:0+8px;border-radius:2px;background:#9f0;font:12px/3 arial;color:#000;cursor:pointer'>Save Visible";
       bg.setAttribute("style", "all:unset;position:fixed;inset:0;z-index:2147483647;width:100vw;height:100vh;backdrop-filter:brightness(.8);cursor:crosshair");
 
       let scaleBtn = bg.firstChild;
@@ -63,7 +63,7 @@
         if (e.target == bg) {
           bg.textContent = "";
           bg.removeEventListener("click", onClick, 1);
-          root.appendChild(rect).setAttribute("style", "all:unset;width:0;height:0;position:absolute;inset:0;z-index:2147483647;box-sizing:border-box;border:1px dashed#fff;backdrop-filter:brightness(1.2);cursor:crosshair");
+          root.appendChild(rect).setAttribute("style", "all:unset;width:0;height:0;position:absolute;inset:0;z-index:2147483647;box-sizing:border-box;border:dashed#fff+1px;backdrop-filter:brightness(1.2);cursor:crosshair");
           let scrollLeft = root.scrollLeft;
           let scrollTop = root.scrollTop;
           let bcr = rect.getBoundingClientRect();
