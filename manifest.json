@@ -2,14 +2,14 @@
   "manifest_version": 3,
   "name": "sciss",
   "version": "0",
-  "description": "Take screenshot (Alt+S)",
+  "description": "Take screenshot (Alt+U)",
   "icons": {
     "128":"128.png"
   },
   "commands": {
     "0": {
       "suggested_key": {
-        "default": "Alt+S"
+        "default": "Alt+U"
       },
       "description":"Take screenshot"
     }
