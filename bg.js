@@ -1,7 +1,7 @@
 {
   let run = async (a, b) => {
     let tabId = (b || a).id;
-    tabId < 0 && (tabId = (await chrome.tabs.query({ active: !0, currentWindow: !0 }))[0].id);
+    tabId > 0 || (tabId = (await chrome.tabs.query({ active: !0, currentWindow: !0 }))[0].id);
     chrome.action.disable(tabId);
     let target = { tabId };
     try {
