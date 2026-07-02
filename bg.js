@@ -31,10 +31,10 @@
         });
       }
     } catch {}
-    chrome.action.enable(tabId).catch(() => 0);
+    chrome.action.enable(tabId).catch(Function.prototype);
     return chrome.debugger.detach(target)
       .then(() => chrome.debugger.sendCommand(target, "Emulation.setScrollbarsHidden", { hidden: !1 }))
-      .catch(() => 0);
+      .catch(Function.prototype);
   }
   chrome.action.onClicked.addListener(run);
   chrome.contextMenus.onClicked.addListener(run);
