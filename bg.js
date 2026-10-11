@@ -1,50 +1,53 @@
 {
-  let run = async (a, b) => {
-    let tabId = (b || a).id;
-    tabId > 0 || (tabId = (await chrome.tabs.query({ active: !0, currentWindow: !0 }))[0].id);
-    chrome.action.disable(tabId);
-    let target = { tabId };
-    try {
-      await chrome.debugger.attach(target, "1.3");
-      chrome.debugger.sendCommand(target, "Emulation.setScrollbarsHidden", { hidden: !0 });
-      let result = (await chrome.scripting.executeScript({
-        target,
-        files: ["main.js"]
-      }))[0].result;
+  let { action, commands, debugger: _debugger, downloads, contextMenus, runtime, scripting, tabs } = chrome;
+  let tabId;
+  let target;
+  onunhandledrejection = e => (
+    e && e.preventDefault?.(),
+    tabId && (
+      action.enable(tabId),
+      _debugger.sendCommand(target, "Emulation.setScrollbarsHidden", { hidden: !1 }),
+      _debugger.detach(target),
+      tabId = target = 0
+    )
+  );
+  let f = async (a, b) => (
+    (tabId = (b ||= a).id) < 0 &&
+    (tabId = (await tabs.query({ active: !0, currentWindow: !0 }))[0].id),
+    action.disable(tabId),
+    _debugger.attach(target = { tabId }, "1.3"),
+    _debugger.sendCommand(target, "Emulation.setScrollbarsHidden", { hidden: !0 }),
+    scripting.executeScript({
+      target,
+      files: ["main.js"]
+    }, results => {
+      let result = results[0].result;
       if (result) {
-        let crx = (await chrome.management.getAll()).find(v => v.name == "fformat");
-        if (crx) {
-          let id = crx.id;
-          chrome.management.setEnabled(id, !1);
-          let onDownloadsCreated = () => (
-            chrome.management.setEnabled(id, !0),
-            chrome.downloads.onCreated.removeListener(onDownloadsCreated)
-          );
-          chrome.downloads.onCreated.addListener(onDownloadsCreated);
-        }
-        let filename = (b || a).url;
+        _debugger.sendCommand(target, "Page.captureScreenshot", result, e =>
+          downloads.download({
+            url: "data:image/png;base64," + e.data,
+            filename,
+            saveAs: !0
+          }, onunhandledrejection)
+        );
+        let filename = b.url;
         let len = filename.length;
-        chrome.downloads.download({
-          url: "data:image/png;base64," + (await chrome.debugger.sendCommand(target, "Page.captureScreenshot", result)).data,
-          filename: decodeURIComponent(filename.slice(filename[0] != "f" ? filename[5] ==":" ? 8 : 7 : 9, len - (filename[len - 1] == "/"))).replace(/[|?":/<>*\\]/g, "_") + ".png",
-          saveAs: !0
-        });
+        filename = filename.slice(
+          filename[0] === "f" ? filename[5] === ":" ? 8 : 7 : 9,
+          len - (filename[len - 1] === "/" ? 1 : 0)).replace(/[|?":/<>*\\]/g, "_"
+        ) + ".png";
       }
-    } catch {}
-    chrome.action.enable(tabId).catch(Function.prototype);
-    return chrome.debugger.detach(target)
-      .then(() => chrome.debugger.sendCommand(target, "Emulation.setScrollbarsHidden", { hidden: !1 }))
-      .catch(Function.prototype);
-  }
-  chrome.action.onClicked.addListener(run);
-  chrome.contextMenus.onClicked.addListener(run);
-  chrome.commands.onCommand.addListener(run);
+    })
+  )
+  action.onClicked.addListener(f);
+  contextMenus.onClicked.addListener(f);
+  commands.onCommand.addListener(f);
+  runtime.onInstalled.addListener(() =>
+    contextMenus.create({
+      id: "",
+      title: "Take Screenshot",
+      contexts: ["page", "frame", "link", "editable", "image", "video"],
+      documentUrlPatterns: ["https://*/*", "http://*/*", "file://*"]
+    })
+  );
 }
-chrome.runtime.onInstalled.addListener(() =>
-  chrome.contextMenus.create({
-    id: "",
-    title: "Take Screenshot",
-    contexts: ["page", "frame", "link", "editable", "image", "video"],
-    documentUrlPatterns: ["https://*/*", "http://*/*", "file://*"]
-  })
-);

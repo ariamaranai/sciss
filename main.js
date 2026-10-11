@@ -15,13 +15,13 @@
         if (overflowY == "auto" || overflowY == "scroll") {
           styleChanged.push(node, node.getAttribute("style"));
           let style = node.style;
-          style.height = style.overflowY = "unset!important";
+          style.height = style.overflowY = "auto!important";
 
           let parentElement = node.parentElement;
           while (parentElement)
             styleChanged.push(parentElement, parentElement.getAttribute("style")),
             style = parentElement.style,
-            style.height = style.overflowY = "unset!important",
+            style.height = style.overflowY = "auto!important",
             parentElement = parentElement.parentElement;
 
           node = walker.nextSibling();
